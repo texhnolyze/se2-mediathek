@@ -25,3 +25,8 @@ ein (Abnahmebedingung):
 
 Hinweis: Um den Überblick zu behalten, kann es sinnvoll sein, die Anforderungspunkte nacheinander umzusetzen.
 Zusatzaufgabe: Baut die Möglichkeit zum Stornieren einer Vormerkung in die Mediathek ein.
+
+
+## Resources
+- [Einfache Git Einführung](https://rogerdudler.github.io/git-guide/)
+- [Tiefere Git Einführung](https://www.atlassian.com/git)
