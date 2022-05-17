@@ -4,14 +4,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 
+import de.uni_hamburg.informatik.swt.se2.mediathek.fachwerte.Datum;
 import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.Kunde;
 import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.medien.Medium;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.ServiceObserver;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.kundenstamm.KundenstammService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.medienbestand.MedienbestandService;
+import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.ProtokollierException;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.VerleihService;
+import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerk.VormerkService;
+import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerk.VormerkerException;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.SubWerkzeugObserver;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.subwerkzeuge.kundenauflister.KundenauflisterWerkzeug;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.subwerkzeuge.kundendetailanzeiger.KundenDetailAnzeigerWerkzeug;
@@ -21,7 +25,7 @@ import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.subwerkzeuge.vormer
 /**
  * Ein VormerkWerkzeug stellt die Funktionalität des Vormerkens für die
  * Benutzungsoberfläche bereit. Die UI wird durch die VormerkUI gestaltet.
- * 
+ *
  * @author SE2-Team
  * @version SoSe 2021
  */
@@ -37,6 +41,11 @@ public class VormerkWerkzeug
      * Der Service zum Ausleihen von Medien.
      */
     private final VerleihService _verleihService;
+
+    /**
+     * Der Service zum Vormerken von Medien.
+     */
+    private final VormerkService _vormerkService;
 
     /**
      * Das Sub-Werkzeug zum Darstellen und Selektieren der Kunden.
@@ -62,23 +71,31 @@ public class VormerkWerkzeug
      * Initialisiert ein neues VormerkWerkzeug. Es wird die Benutzungsoberfläche
      * mit den Ausleihaktionen erzeugt, Beobachter an den Services registriert
      * und die anzuzeigenden Materialien gesetzt.
-     * 
+     *
      * @param medienbestand Der Medienbestand.
      * @param kundenstamm Der Kundenstamm.
      * @param verleihService Der Verleih-Service.
-     * 
+     *
      * @require medienbestand != null
      * @require kundenstamm != null
      * @require verleihService != null
+     * @require vormerkService != null
      */
     public VormerkWerkzeug(MedienbestandService medienbestand,
-            KundenstammService kundenstamm, VerleihService verleihService)
+            KundenstammService kundenstamm, VerleihService verleihService,
+            VormerkService vormerkService)
     {
-        assert medienbestand != null : "Vorbedingung verletzt: medienbestand != null";
-        assert kundenstamm != null : "Vorbedingung verletzt: kundenstamm != null";
-        assert verleihService != null : "Vorbedingung verletzt: verleihService != null";
+        assert medienbestand
+                != null : "Vorbedingung verletzt: medienbestand != null";
+        assert kundenstamm
+                != null : "Vorbedingung verletzt: kundenstamm != null";
+        assert verleihService
+                != null : "Vorbedingung verletzt: verleihService != null";
+        assert vormerkService
+                != null : "Vorbedingung verletzt: vormerkService != null";
 
         _verleihService = verleihService;
+        _vormerkService = vormerkService;
 
         // Subwerkzeuge erstellen
         _kundenAuflisterWerkzeug = new KundenauflisterWerkzeug(kundenstamm);
@@ -139,8 +156,7 @@ public class VormerkWerkzeug
         _verleihService.registriereBeobachter(new ServiceObserver()
         {
 
-            @Override
-            public void reagiereAufAenderung()
+            @Override public void reagiereAufAenderung()
             {
                 aktualisiereVormerkButton();
             }
@@ -153,15 +169,13 @@ public class VormerkWerkzeug
      */
     private void registriereVormerkAktion()
     {
-        _vormerkUI.getVormerkenButton()
-            .addActionListener(new ActionListener()
+        _vormerkUI.getVormerkenButton().addActionListener(new ActionListener()
+        {
+            @Override public void actionPerformed(ActionEvent e)
             {
-                @Override
-                public void actionPerformed(ActionEvent e)
-                {
-                    merkeAusgewaehlteMedienVor();
-                }
-            });
+                merkeAusgewaehlteMedienVor();
+            }
+        });
     }
 
     /**
@@ -172,8 +186,7 @@ public class VormerkWerkzeug
     {
         _kundenAuflisterWerkzeug.registriereBeobachter(new SubWerkzeugObserver()
         {
-            @Override
-            public void reagiereAufAenderung()
+            @Override public void reagiereAufAenderung()
             {
                 zeigeAusgewaehltenKunden();
                 aktualisiereVormerkButton();
@@ -190,8 +203,7 @@ public class VormerkWerkzeug
         _medienAuflisterWerkzeug.registriereBeobachter(new SubWerkzeugObserver()
         {
 
-            @Override
-            public void reagiereAufAenderung()
+            @Override public void reagiereAufAenderung()
             {
                 zeigeAusgewaehlteMedien();
                 aktualisiereVormerkButton();
@@ -202,7 +214,7 @@ public class VormerkWerkzeug
     /**
      * Überprüft, ob ein Kunde selektiert ist und ob selektierte Medien für
      * diesen Kunden vorgemerkt werden können.
-     * 
+     *
      * @return true, wenn vormerken möglich ist, sonst false.
      */
     private boolean istVormerkenMoeglich()
@@ -212,7 +224,8 @@ public class VormerkWerkzeug
         // TODO für Aufgabenblatt 6 (nicht löschen): Prüfung muss noch eingebaut
         // werden. Ist dies korrekt imlpementiert, wird der Vormerk-Button gemäß
         // der Anforderungen a), b), c) und e) aktiviert.
-        boolean vormerkenMoeglich = (kunde != null) && !medien.isEmpty();
+        boolean vormerkenMoeglich = (kunde != null) && !medien.isEmpty()
+                && _vormerkService.istVormerkenMoeglich(medien, kunde);
 
         return vormerkenMoeglich;
     }
@@ -224,12 +237,17 @@ public class VormerkWerkzeug
      */
     private void merkeAusgewaehlteMedienVor()
     {
-
-        List<Medium> selectedMedien = _medienAuflisterWerkzeug
-            .getSelectedMedien();
+        List<Medium> selectedMedien = _medienAuflisterWerkzeug.getSelectedMedien();
         Kunde selectedKunde = _kundenAuflisterWerkzeug.getSelectedKunde();
-        // TODO für Aufgabenblatt 6 (nicht löschen): Vormerken einbauen
-
+        try
+        {
+            _vormerkService.merkeVor(selectedKunde, selectedMedien);
+        }
+        catch (VormerkerException exception)
+        {
+            JOptionPane.showMessageDialog(null, exception.getMessage(),
+                    "Fehlermeldung", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
@@ -237,8 +255,7 @@ public class VormerkWerkzeug
      */
     private void zeigeAusgewaehlteMedien()
     {
-        List<Medium> selectedMedien = _medienAuflisterWerkzeug
-            .getSelectedMedien();
+        List<Medium> selectedMedien = _medienAuflisterWerkzeug.getSelectedMedien();
         _medienDetailAnzeigerWerkzeug.setMedien(selectedMedien);
     }
 
@@ -255,7 +272,7 @@ public class VormerkWerkzeug
      * Setzt den Ausleihbutton auf benutzbar (enabled) falls die gerade
      * selektierten Medien alle ausgeliehen werden können und ein Kunde
      * ausgewählt ist.
-     * 
+     *
      * Wenn keine Medien selektiert sind oder wenn mindestes eines der
      * selektierten Medien bereits ausgeliehen ist oder wenn kein Kunde
      * ausgewählt ist, wird der Button ausgegraut.
@@ -263,13 +280,12 @@ public class VormerkWerkzeug
     private void aktualisiereVormerkButton()
     {
         boolean istVormerkenMoeglich = istVormerkenMoeglich();
-        _vormerkUI.getVormerkenButton()
-            .setEnabled(istVormerkenMoeglich);
+        _vormerkUI.getVormerkenButton().setEnabled(istVormerkenMoeglich);
     }
 
     /**
      * Gibt das Panel, dass die UI-Komponente darstellt zurück.
-     * 
+     *
      * @ensure result != null
      */
     public JPanel getUIPanel()

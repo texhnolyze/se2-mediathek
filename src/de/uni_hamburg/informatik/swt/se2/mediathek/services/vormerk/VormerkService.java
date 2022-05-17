@@ -14,9 +14,30 @@ public class VormerkService extends AbstractObservableService
 {
     private Map<Medium, Vormerkungskarte> _vormerkungen;
 
-    public VormerkService()
+    public VormerkService(Map <Medium, Vormerkungskarte> vormerkungen)
     {
-        _vormerkungen = new HashMap<>();
+        _vormerkungen = vormerkungen;
+    }
+
+    /**
+     * Merkt einen neuen Kunden bei einem Medium vor.
+     *
+     * @param kunde Auf den vorgemerkt werden soll
+     * @param medien Liste von medien die vorgemerkt werden soll
+     * @throws VormerkerException
+     *
+     * @require kunde != null
+     * @require medien != null && medien.size() > 0
+     */
+    public void merkeVor(Kunde kunde, List<Medium> medien) throws VormerkerException
+    {
+        assert kunde != null : "Vorbedingung verletzt: kunde != null";
+        assert medien != null && medien.size() > 0 : "Vorbedingung verletzt: medien != null && medien.size() > 0";
+
+        for (Medium medium : medien)
+        {
+            merkeVor(kunde, medium);
+        }
     }
 
     /**
@@ -47,6 +68,30 @@ public class VormerkService extends AbstractObservableService
 
         throw new VormerkerException(
                 "Dieser Kunde kann nicht Vorgemerkt werden.");
+    }
+
+    /**
+     * Gibt zurück ob der Kunde die Medien vormerken könnte.
+     *
+     * @param medien Die geprüft werden soll.
+     * @param kunde Der Kunde für den geprüft werden soll
+     * @return boolean true, wenn möglich; false, wenn nicht möglich
+     *
+     * @require kunde != null
+     * @require medien != null && medien.size() > 0
+     */
+    public boolean istVormerkenMoeglich(List<Medium> medien, Kunde kunde)
+    {
+        assert kunde != null : "Vorbedingung verletzt: kunde != null";
+        assert medien != null && medien.size() > 0 : "Vorbedingung verletzt: medien != null && medien.size() > 0";
+
+        for (Medium medium : medien) {
+          if (!istVormerkenMoeglich(medium, kunde)) {
+              return false;
+          }
+        }
+
+        return true;
     }
 
     /**
