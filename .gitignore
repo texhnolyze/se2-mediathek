@@ -269,3 +269,6 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,eclipse,intellij+all,vim,windows,linux,java
+
+# Compiled java class files
+*.class
