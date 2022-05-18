@@ -1,7 +1,10 @@
 package de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerk;
 
+import de.uni_hamburg.informatik.swt.se2.mediathek.fachwerte.Kundennummer;
 import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.Kunde;
 import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.Vormerkungskarte;
+import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.medien.CD;
+import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.medien.DVD;
 import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.medien.Medium;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,12 +19,12 @@ import static org.junit.Assert.*;
 public class VormerkServiceTest
 {
     private VormerkService _service;
-    private Medium _medium;
+    private Medium _medium = new DVD("MockTitle", "MockComment", "Matt Damon", 69);
 
-    private Medium _mediumSchonVorgemerkt;
-    private Kunde _kunde;
+    private Medium _mediumSchonVorgemerkt = new CD("MockTitle", "MockComment", "MockInterpreter", 420);
+    private Kunde _kunde = new Kunde(new Kundennummer(420420), "Hugh", "Mungus");
 
-    private Kunde _kundeSchonVorgemerkt;
+    private Kunde _kundeSchonVorgemerkt = new Kunde(new Kundennummer(123123), "Mark", "Vorgemerkt");
 
     private Vormerkungskarte _vormerkungskarte;
 
@@ -31,7 +34,9 @@ public class VormerkServiceTest
     {
         _vormerkungskarte = new Vormerkungskarte(_mediumSchonVorgemerkt);
         _vormerkungskarte.merkeVor(_kundeSchonVorgemerkt);
-        _vormerkungen = Collections.singletonMap(_medium, _vormerkungskarte);
+        //_vormerkungen = Collections.singletonMap(_medium, _vormerkungskarte);
+        _vormerkungen = new HashMap<Medium, Vormerkungskarte>();
+        _vormerkungen.put(_mediumSchonVorgemerkt, _vormerkungskarte);
         _service = new VormerkService(_vormerkungen);
     }
 
@@ -51,17 +56,24 @@ public class VormerkServiceTest
     {
         _service.merkeVor(_kunde, _mediumSchonVorgemerkt);
 
-        assertEquals(_service.getVormerkerFür(_medium),
-                List.of(_kundeSchonVorgemerkt, _kunde));
+        //assertEquals(_service.getVormerkerFür(_medium),
+        //        List.of(_kundeSchonVorgemerkt, _kunde));
+        assertEquals(List.of(_kundeSchonVorgemerkt, _kunde),
+                _service.getVormerkerFür(_mediumSchonVorgemerkt));
     }
 
     @Test public void merkeVor_wirftException_wennKundeNichtVormerkenKann()
             throws VormerkerException
     {
-        _service.merkeVor(_kunde, _mediumSchonVorgemerkt);
-
-        assertEquals(_service.getVormerkerFür(_medium),
-                List.of(_kundeSchonVorgemerkt, _kunde));
+        try
+        {
+            _service.merkeVor(_kundeSchonVorgemerkt, _mediumSchonVorgemerkt);
+            fail("Expected VormerkException");
+        }
+        catch (VormerkerException vormerkerException)
+        {
+            // Pass
+        }
     }
 
     @Test public void istVormerkenMoeglich()

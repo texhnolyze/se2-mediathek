@@ -64,6 +64,7 @@ public class VormerkService extends AbstractObservableService
         if (vormerkungskarte.kannVormerken(kunde))
         {
             vormerkungskarte.merkeVor(kunde);
+            return;
         }
 
         throw new VormerkerException(
