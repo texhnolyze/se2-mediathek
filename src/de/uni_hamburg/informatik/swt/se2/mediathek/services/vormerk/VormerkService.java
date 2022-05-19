@@ -61,14 +61,13 @@ public class VormerkService extends AbstractObservableService
             vormerkungskarte = new Vormerkungskarte(medium);
             _vormerkungen.put(medium, vormerkungskarte);
         }
-        if (vormerkungskarte.kannVormerken(kunde))
+        if (!vormerkungskarte.kannVormerken(kunde))
         {
-            vormerkungskarte.merkeVor(kunde);
-            return;
+            throw new VormerkerException(
+                    "Dieser Kunde kann nicht Vorgemerkt werden.");
         }
-
-        throw new VormerkerException(
-                "Dieser Kunde kann nicht Vorgemerkt werden.");
+        vormerkungskarte.merkeVor(kunde);
+        informiereUeberAenderung();
     }
 
     /**
@@ -140,13 +139,13 @@ public class VormerkService extends AbstractObservableService
 
     /**
      * Gibt den nächsten Ausleiher für ein Medium
-     * 
+     *
      * @param medium betrffendes Medium
      * @return Kunde nächster Ausleiher
-     * 
+     *
      * @require medium != null
      */
-    public Kunde getNaechstenAusleiherFür(Medium medium)
+    public Kunde getNaechstenAusleiherFuer(Medium medium)
     {
         assert medium != null : "Vorbedingung verletzt: medium != null";
 
@@ -156,5 +155,25 @@ public class VormerkService extends AbstractObservableService
             return null;
         }
         return vormerkungskarte.getNaechstenAusleiher();
+    }
+
+    /**
+     * Gibt den nächsten Ausleiher für ein Medium und entfernt ihn aus den Vormerkungen
+     * 
+     * @param medium betrffendes Medium
+     * @return Kunde nächster Ausleiher
+     * 
+     * @require medium != null
+     */
+    public Kunde getAndRemoveNaechstenAusleiherFür(Medium medium)
+    {
+        assert medium != null : "Vorbedingung verletzt: medium != null";
+
+        Vormerkungskarte vormerkungskarte = _vormerkungen.get(medium);
+        if (vormerkungskarte == null)
+        {
+            return null;
+        }
+        return vormerkungskarte.getAndRemoveNaechstenAusleiher();
     }
 }

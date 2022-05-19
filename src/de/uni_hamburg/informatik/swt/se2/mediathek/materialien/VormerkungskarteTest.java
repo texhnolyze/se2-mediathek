@@ -15,7 +15,7 @@ public class VormerkungskarteTest {
     private final Kunde _k4 = new Kunde(new Kundennummer(444444), "FN", "LN");
 
     @Test
-    public void testKannVormerken()
+    public void testKannVormerkenNachKapazitaet()
     {
         // Queue full
         Vormerkungskarte v1 = getNewVormerkungskarte();
@@ -29,7 +29,11 @@ public class VormerkungskarteTest {
 
         v1.merkeVor(_k4);
         assertFalse(v1.kannVormerken(_k1));
+    }
 
+    @Test
+    public void testKannVormerkenNachDoppeltemObjekt()
+    {
         // Queue contains Kunde object
         Vormerkungskarte v2 = getNewVormerkungskarte();
         v2.merkeVor(_k1);
@@ -41,12 +45,13 @@ public class VormerkungskarteTest {
     {
         Vormerkungskarte v1 = getNewVormerkungskarte();
 
-        assertNull(v1.getNaechstenAusleiher());
+        assertFalse(v1.istKundeVorgemerkt(_k1));
+        assertTrue(v1.kannVormerken(_k1));
 
         v1.merkeVor(_k1);
 
-        assertEquals(1, v1.getVormerker().size());
-        assertEquals(v1.getNaechstenAusleiher(), _k1);
+        assertTrue(v1.sindVormerkungenVorhanden());
+        assertTrue(v1.istKundeVorgemerkt(_k1));
     }
 
     @Test
@@ -58,15 +63,18 @@ public class VormerkungskarteTest {
 
         v1.merkeVor(_k1);
         assertEquals(1, v1.getVormerker().size());
+        assertEquals(_k1, v1.getVormerker().get(0));
 
         v1.merkeVor(_k2);
         assertEquals(2, v1.getVormerker().size());
+        assertEquals(_k1, v1.getVormerker().get(0));
+        assertEquals(_k2, v1.getVormerker().get(1));
 
         v1.merkeVor(_k3);
         assertEquals(3, v1.getVormerker().size());
-
-        v1.merkeVor(_k4);
-        assertEquals(3, v1.getVormerker().size());
+        assertEquals(_k1, v1.getVormerker().get(0));
+        assertEquals(_k2, v1.getVormerker().get(1));
+        assertEquals(_k3, v1.getVormerker().get(2));
     }
 
     @Test
@@ -74,14 +82,61 @@ public class VormerkungskarteTest {
     {
         Vormerkungskarte v1 = getNewVormerkungskarte();
 
-        assertNull(v1.getNaechstenAusleiher());
+        assertFalse(v1.sindVormerkungenVorhanden());
+
+        v1.merkeVor(_k1);
+
+        assertEquals(_k1, v1.getNaechstenAusleiher());
+        assertEquals(_k1, v1.getNaechstenAusleiher());
+        assertTrue(v1.istKundeVorgemerkt(_k1));
+    }
+
+    @Test
+    public void testGetAndRemoveNaechstenAusleiher()
+    {
+        Vormerkungskarte v1 = getNewVormerkungskarte();
+
+        assertFalse(v1.sindVormerkungenVorhanden());
 
         v1.merkeVor(_k1);
         v1.merkeVor(_k2);
 
-        assertEquals(_k1, v1.getNaechstenAusleiher());
-        assertEquals(_k2, v1.getNaechstenAusleiher());
-        assertNull(v1.getNaechstenAusleiher());
+        assertEquals(_k1, v1.getAndRemoveNaechstenAusleiher());
+        assertEquals(_k2, v1.getAndRemoveNaechstenAusleiher());
+
+        assertFalse(v1.sindVormerkungenVorhanden());
+    }
+
+    @Test
+    public void testSindVormerkungenVorhanden()
+    {
+        Vormerkungskarte v1 = getNewVormerkungskarte();
+
+        assertFalse(v1.sindVormerkungenVorhanden());
+
+        v1.merkeVor(_k1);
+
+        assertTrue(v1.sindVormerkungenVorhanden());
+
+        v1.getAndRemoveNaechstenAusleiher();
+
+        assertFalse(v1.sindVormerkungenVorhanden());
+    }
+
+    @Test
+    public void testIstKundeVorgemerkt()
+    {
+        Vormerkungskarte v1 = getNewVormerkungskarte();
+
+        assertFalse(v1.istKundeVorgemerkt(_k1));
+
+        v1.merkeVor(_k1);
+
+        assertTrue(v1.istKundeVorgemerkt(_k1));
+
+        v1.getAndRemoveNaechstenAusleiher();
+
+        assertFalse(v1.istKundeVorgemerkt(_k1));
     }
 
     private Vormerkungskarte getNewVormerkungskarte()

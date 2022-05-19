@@ -13,7 +13,7 @@ public class Vormerkungskarte
     private final ArrayBlockingQueue<Kunde> _queue;
 
     /**
-     * Erstellt eine neue Vormerkungskarte.
+     * Initialisiert eine neue Vormerkungskarte.
      *
      * @param medium Das Medium, zu dem diese Vormerkungskarte gehört
      *
@@ -33,6 +33,8 @@ public class Vormerkungskarte
      * @param kunde Der Kunde, der sich auf dieser Vormerkungskarte abgebildet sehen will
      *
      * @require kunde != null
+     *
+     * @return Ob der Kunde das Medium vormerken kann
      */
     public boolean kannVormerken(Kunde kunde)
     {
@@ -47,10 +49,15 @@ public class Vormerkungskarte
      * @param kunde Der Kunde, der das Medium vormerken möchte
      *
      * @require kunde != null
+     * @require kannVormerken(kunde)
+     *
+     * @ensure sindVormerkungenVorhanden()
+     * @ensure istKundeVorgemerkt(kunde)
      */
     public void merkeVor(Kunde kunde)
     {
         assert kunde != null : "Vorbedingung verletzt: kunde != null";
+        assert kannVormerken(kunde) : "Vorbedingung verletzt: kannVormerken(kunde)";
 
         _queue.offer(kunde);
     }
@@ -78,12 +85,55 @@ public class Vormerkungskarte
     }
 
     /**
-     * Entfernt den Kunden, der als nächstes dran ist, das Medium auszuleihen und gibt ihn zurück.
+     * Gibt zurück, ob Vormerkungen vorhanden sind.
      *
-     * @return Den Kunden, der al nächstes dran ist, das Medium auszuleihen.
+     * @return Ob Vormerkungen vorhanden sind
+     */
+    public boolean sindVormerkungenVorhanden()
+    {
+        return _queue.size() > 0;
+    }
+
+    /**
+     * Gibt den Kunden, der als nächstes dran wäre, zurück, ohne ihn aus der Schlange zu entfernen
+     *
+     * @require sindVormerkungenVorhanden()
+     *
+     * @return Der Kunde, der als nächstes dran wäre
      */
     public Kunde getNaechstenAusleiher()
     {
+        assert sindVormerkungenVorhanden() : "Vorbedingung verletzt: sindVormerkungenVorhanden()";
+
+        return _queue.peek();
+    }
+
+    /**
+     * Entfernt den Kunden, der als nächstes dran ist, das Medium auszuleihen und gibt ihn zurück.
+     *
+     * @return Den Kunden, der als nächstes dran ist, das Medium auszuleihen.
+     *
+     * @require sindVormerkungenVorhanden()
+     */
+    public Kunde getAndRemoveNaechstenAusleiher()
+    {
+        assert sindVormerkungenVorhanden() : "Vorbedingung verletzt: sindVormerkungenVorhanden()";
+
         return _queue.poll();
+    }
+
+    /**
+     * Gibt zurück, ob ein bestimmter Kunde bereits vormerkt.
+     *
+     * @param kunde Der Kunde, auf den überprüft werden soll
+     * @return Ob der Kunde bereits vormerkt
+     *
+     * @require kunde != null
+     */
+    public boolean istKundeVorgemerkt(Kunde kunde)
+    {
+        assert kunde != null : "Vorbedingung verletzt: kunde != null";
+
+        return _queue.contains(kunde);
     }
 }

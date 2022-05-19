@@ -43,11 +43,11 @@ public class VormerkServiceTest
     @Test public void merkeVor_erstelltNeueVormerkungsKarte_fallsNichtVorhanden()
             throws VormerkerException
     {
-        assertNotEquals(_service.getNaechstenAusleiherFür(_medium), _kunde);
+        assertNotEquals(_service.getAndRemoveNaechstenAusleiherFür(_medium), _kunde);
 
         _service.merkeVor(_kunde, _medium);
 
-        assertEquals(_service.getNaechstenAusleiherFür(_medium), _kunde);
+        assertEquals(_service.getAndRemoveNaechstenAusleiherFür(_medium), _kunde);
 
     }
 

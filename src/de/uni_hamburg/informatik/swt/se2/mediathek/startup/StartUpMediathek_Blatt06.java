@@ -5,6 +5,11 @@ import java.util.HashMap;
 
 import javax.swing.SwingUtilities;
 
+import de.uni_hamburg.informatik.swt.se2.mediathek.fachwerte.Kundennummer;
+import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.Kunde;
+import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.Vormerkungskarte;
+import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.medien.CD;
+import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.medien.Medium;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.kundenstamm.KundenstammService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.kundenstamm.KundenstammServiceImpl;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.medienbestand.MedienbestandService;
