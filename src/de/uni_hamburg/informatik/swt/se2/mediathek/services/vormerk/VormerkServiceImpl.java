@@ -12,7 +12,7 @@ import de.uni_hamburg.informatik.swt.se2.mediathek.services.AbstractObservableSe
 public class VormerkServiceImpl extends AbstractObservableService
         implements VormerkService
 {
-    private Map<Medium, Vormerkungskarte> _vormerkungen;
+    private final Map<Medium, Vormerkungskarte> _vormerkungen;
 
     public VormerkServiceImpl(Map<Medium, Vormerkungskarte> vormerkungen)
     {
@@ -86,7 +86,7 @@ public class VormerkServiceImpl extends AbstractObservableService
     }
 
     @Override
-    public List<Kunde> getVormerkerFür(Medium medium)
+    public List<Kunde> getVormerkerFuer(Medium medium)
     {
         assert medium != null : "Vorbedingung verletzt: medium != null";
 
@@ -112,7 +112,7 @@ public class VormerkServiceImpl extends AbstractObservableService
     }
 
     @Override
-    public Kunde getAndRemoveNaechstenAusleiherFür(Medium medium)
+    public Kunde getAndRemoveNaechstenAusleiherFuer(Medium medium)
     {
         assert medium != null : "Vorbedingung verletzt: medium != null";
 
@@ -121,6 +121,8 @@ public class VormerkServiceImpl extends AbstractObservableService
         {
             return null;
         }
+
+        informiereUeberAenderung();
         return vormerkungskarte.getAndRemoveNaechstenAusleiher();
     }
 }

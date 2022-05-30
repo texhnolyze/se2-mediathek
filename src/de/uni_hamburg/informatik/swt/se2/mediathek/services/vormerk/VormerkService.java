@@ -1,11 +1,9 @@
 package de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerk;
 
 import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.Kunde;
-import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.Vormerkungskarte;
 import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.medien.Medium;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.ObservableService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -78,7 +76,7 @@ public interface VormerkService extends ObservableService
      *
      * @require medium != null
      */
-    List<Kunde> getVormerkerFür(Medium medium);
+    List<Kunde> getVormerkerFuer(Medium medium);
 
     /**
      * Gibt den nächsten Ausleiher für ein Medium
@@ -98,5 +96,5 @@ public interface VormerkService extends ObservableService
      *
      * @require medium != null
      */
-    Kunde getAndRemoveNaechstenAusleiherFür(Medium medium);
+    Kunde getAndRemoveNaechstenAusleiherFuer(Medium medium);
 }

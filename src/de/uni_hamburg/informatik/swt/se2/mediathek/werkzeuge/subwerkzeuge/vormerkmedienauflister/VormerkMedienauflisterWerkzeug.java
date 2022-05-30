@@ -95,7 +95,7 @@ public class VormerkMedienauflisterWerkzeug extends ObservableSubWerkzeug
                 entleiher = _verleihService.getEntleiherFuer(medium);
             }
 
-            List<Kunde> vormerker = _vormerkService.getVormerkerFür(medium);
+            List<Kunde> vormerker = _vormerkService.getVormerkerFuer(medium);
             Kunde vormerker1 = vormerker.size() >= 1 ? vormerker.get(0) : null;
             Kunde vormerker2 = vormerker.size() >= 2 ? vormerker.get(1) : null;
             Kunde vormerker3 = vormerker.size() >= 3 ? vormerker.get(2) : null;
