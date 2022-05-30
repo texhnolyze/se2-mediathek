@@ -18,10 +18,10 @@ import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.ObservableSubWerkze
 /**
  * Ein VormerkMedienauflisterWerkzeug ist ein Werkzeug zum Auflisten von Medien
  * mit ihren für das Vormerken relevanten Verleihinformationen.
- * 
+ *
  * Das Werkzeug ist beobachtbar und informiert darüber, wenn sich die Selektion
  * in der Medienliste ändert.
- * 
+ *
  * @author SE2-Team
  * @version SoSe 2021
  */
@@ -35,10 +35,10 @@ public class VormerkMedienauflisterWerkzeug extends ObservableSubWerkzeug
     /**
      * Initialisiert ein neues VormerkMedienauflisterWerkzeug. Es wird die
      * Benutzungsoberfläche zum Darstellen der Medien erzeugt.
-     * 
+     *
      * @param medienbestand Der Medienbestand.
      * @param verleihService Der Verleih-Service.
-     * 
+     *
      * @require medienbestand != null
      * @require verleihService != null
      * @require vormerkService != null
@@ -89,33 +89,16 @@ public class VormerkMedienauflisterWerkzeug extends ObservableSubWerkzeug
             // Entleiher und möglichen Vormerkern ausgestattet werden.
             // Ist dies korrekt implementiert, erscheinen in der Vormerkansicht
             // die Namen des Entleihers und der möglichen 3 Vormerker.
-            //Kunde entleiher = null;
-            Kunde vormerker1 = null;
-            Kunde vormerker2 = null;
-            Kunde vormerker3 = null;
-            //Kunde entleiher = _verleihService.getEntleiherFuer(medium);
             Kunde entleiher = null;
             if (_verleihService.istVerliehen(medium))
             {
                 entleiher = _verleihService.getEntleiherFuer(medium);
             }
-            List<Kunde> vormerker = _vormerkService.getVormerkerFür(medium);
 
-            for (int i = 0; i < vormerker.size(); i++)
-            {
-                if (i == 0)
-                {
-                    vormerker1 = vormerker.get(0);
-                }
-                else if (i == 1)
-                {
-                    vormerker2 = vormerker.get(1);
-                }
-                else if (i == 2)
-                {
-                    vormerker3 = vormerker.get(2);
-                }
-            }
+            List<Kunde> vormerker = _vormerkService.getVormerkerFür(medium);
+            Kunde vormerker1 = vormerker.size() >= 1 ? vormerker.get(0) : null;
+            Kunde vormerker2 = vormerker.size() >= 2 ? vormerker.get(1) : null;
+            Kunde vormerker3 = vormerker.size() >= 3 ? vormerker.get(2) : null;
 
             medienFormatierer.add(new VormerkMedienFormatierer(medium,
                     entleiher, vormerker1, vormerker2, vormerker3));
@@ -164,9 +147,9 @@ public class VormerkMedienauflisterWerkzeug extends ObservableSubWerkzeug
 
     /**
      * Gibt die Liste der vom Benutzer selektierten Medien zurück.
-     * 
+     *
      * @return Die Liste der vom Benutzer selektierten Medien.
-     * 
+     *
      * @ensure result != null
      */
     public List<Medium> getSelectedMedien()
@@ -189,7 +172,7 @@ public class VormerkMedienauflisterWerkzeug extends ObservableSubWerkzeug
 
     /**
      * Gibt das Panel dieses Subwerkzeugs zurück.
-     * 
+     *
      * @ensure result != null
      */
     public JPanel getUIPanel()

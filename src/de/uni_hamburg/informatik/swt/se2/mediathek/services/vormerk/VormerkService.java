@@ -160,7 +160,7 @@ public class VormerkService extends AbstractObservableService
     /**
      * Gibt den nächsten Ausleiher für ein Medium und entfernt ihn aus den Vormerkungen
      * 
-     * @param medium betrffendes Medium
+     * @param medium betreffendes Medium
      * @return Kunde nächster Ausleiher
      * 
      * @require medium != null
