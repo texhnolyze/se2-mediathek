@@ -122,7 +122,8 @@ public class VormerkServiceImpl extends AbstractObservableService
             return null;
         }
 
+        Kunde ausleiher = vormerkungskarte.getAndRemoveNaechstenAusleiher();
         informiereUeberAenderung();
-        return vormerkungskarte.getAndRemoveNaechstenAusleiher();
+        return ausleiher;
     }
 }
