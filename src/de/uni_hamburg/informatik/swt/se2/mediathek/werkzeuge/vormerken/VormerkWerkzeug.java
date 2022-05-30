@@ -6,15 +6,13 @@ import java.util.List;
 
 import javax.swing.*;
 
-import de.uni_hamburg.informatik.swt.se2.mediathek.fachwerte.Datum;
 import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.Kunde;
 import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.medien.Medium;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.ServiceObserver;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.kundenstamm.KundenstammService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.medienbestand.MedienbestandService;
-import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.ProtokollierException;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.VerleihService;
-import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerk.VormerkService;
+import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerk.VormerkServiceImpl;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerk.VormerkerException;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.SubWerkzeugObserver;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.subwerkzeuge.kundenauflister.KundenauflisterWerkzeug;
@@ -45,7 +43,7 @@ public class VormerkWerkzeug
     /**
      * Der Service zum Vormerken von Medien.
      */
-    private final VormerkService _vormerkService;
+    private final VormerkServiceImpl _vormerkService;
 
     /**
      * Das Sub-Werkzeug zum Darstellen und Selektieren der Kunden.
@@ -83,7 +81,7 @@ public class VormerkWerkzeug
      */
     public VormerkWerkzeug(MedienbestandService medienbestand,
             KundenstammService kundenstamm, VerleihService verleihService,
-            VormerkService vormerkService)
+            VormerkServiceImpl vormerkService)
     {
         assert medienbestand
                 != null : "Vorbedingung verletzt: medienbestand != null";

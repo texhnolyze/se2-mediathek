@@ -9,16 +9,15 @@ import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.medien.Medium;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class VormerkServiceTest
+public class VormerkServiceImplTest
 {
-    private VormerkService _service;
+    private VormerkServiceImpl _service;
     private Medium _medium = new DVD("MockTitle", "MockComment", "Matt Damon", 69);
 
     private Medium _mediumSchonVorgemerkt = new CD("MockTitle", "MockComment", "MockInterpreter", 420);
@@ -37,7 +36,7 @@ public class VormerkServiceTest
         //_vormerkungen = Collections.singletonMap(_medium, _vormerkungskarte);
         _vormerkungen = new HashMap<Medium, Vormerkungskarte>();
         _vormerkungen.put(_mediumSchonVorgemerkt, _vormerkungskarte);
-        _service = new VormerkService(_vormerkungen);
+        _service = new VormerkServiceImpl(_vormerkungen);
     }
 
     @Test public void merkeVor_erstelltNeueVormerkungsKarte_fallsNichtVorhanden()

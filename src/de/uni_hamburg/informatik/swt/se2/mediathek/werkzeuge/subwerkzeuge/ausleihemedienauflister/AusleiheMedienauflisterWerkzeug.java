@@ -12,7 +12,7 @@ import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.medien.Medium;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.ServiceObserver;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.medienbestand.MedienbestandService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.VerleihService;
-import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerk.VormerkService;
+import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerk.VormerkServiceImpl;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.ObservableSubWerkzeug;
 
 /**
@@ -30,7 +30,7 @@ public class AusleiheMedienauflisterWerkzeug extends ObservableSubWerkzeug
     private AusleiheMedienauflisterUI _ui;
     private MedienbestandService _medienbestand;
     private final VerleihService _verleihService;
-    private final VormerkService _vormerkService;
+    private final VormerkServiceImpl _vormerkService;
 
     /**
      * Initialisiert ein neues AusleiheMedienauflisterWerkzeug. Es wird die
@@ -43,7 +43,7 @@ public class AusleiheMedienauflisterWerkzeug extends ObservableSubWerkzeug
      * @require verleihService != null
      */
     public AusleiheMedienauflisterWerkzeug(MedienbestandService medienbestand,
-            VerleihService verleihService, VormerkService vormerkService)
+            VerleihService verleihService, VormerkServiceImpl vormerkService)
     {
         assert medienbestand != null : "Vorbedingung verletzt: medienbestand != null";
         assert verleihService != null : "Vorbedingung verletzt: verleihService != null";

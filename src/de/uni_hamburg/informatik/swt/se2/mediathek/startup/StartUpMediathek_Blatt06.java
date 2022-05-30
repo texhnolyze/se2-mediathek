@@ -5,11 +5,6 @@ import java.util.HashMap;
 
 import javax.swing.SwingUtilities;
 
-import de.uni_hamburg.informatik.swt.se2.mediathek.fachwerte.Kundennummer;
-import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.Kunde;
-import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.Vormerkungskarte;
-import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.medien.CD;
-import de.uni_hamburg.informatik.swt.se2.mediathek.materialien.medien.Medium;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.kundenstamm.KundenstammService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.kundenstamm.KundenstammServiceImpl;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.medienbestand.MedienbestandService;
@@ -18,7 +13,7 @@ import de.uni_hamburg.informatik.swt.se2.mediathek.services.persistenz.DateiLese
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.persistenz.DatenEinleser;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.VerleihService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.VerleihServiceImpl;
-import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerk.VormerkService;
+import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerk.VormerkServiceImpl;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.hauptwerkzeug.MediathekWerkzeug;
 
 /**
@@ -38,7 +33,7 @@ public class StartUpMediathek_Blatt06
     private static KundenstammService _kundenstamm;
     private static MedienbestandService _medienbestand;
     private static VerleihService _verleihService;
-    private static VormerkService _vormerkService;
+    private static VormerkServiceImpl _vormerkService;
 
     /**
      * Main-Methode, mit der die Anwendung gestartet wird.
@@ -77,7 +72,7 @@ public class StartUpMediathek_Blatt06
                     datenEinleser.getKunden());
             _verleihService = new VerleihServiceImpl(_kundenstamm,
                     _medienbestand, datenEinleser.getVerleihkarten());
-            _vormerkService = new VormerkService(new HashMap<>());
+            _vormerkService = new VormerkServiceImpl(new HashMap<>());
         }
         catch (DateiLeseException e)
         {

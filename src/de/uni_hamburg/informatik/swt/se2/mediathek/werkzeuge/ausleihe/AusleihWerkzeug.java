@@ -18,7 +18,7 @@ import de.uni_hamburg.informatik.swt.se2.mediathek.services.kundenstamm.Kundenst
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.medienbestand.MedienbestandService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.ProtokollierException;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.VerleihService;
-import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerk.VormerkService;
+import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerk.VormerkServiceImpl;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.SubWerkzeugObserver;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.subwerkzeuge.ausleihemedienauflister.AusleiheMedienauflisterWerkzeug;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.subwerkzeuge.kundenauflister.KundenauflisterWerkzeug;
@@ -48,7 +48,7 @@ public class AusleihWerkzeug
     /**
      * Der Service zum Vormerken von Medien.
      */
-    private final VormerkService _vormerkService;
+    private final VormerkServiceImpl _vormerkService;
 
     /**
      * Das Sub-Werkzeug zum darstellen und selektieren der Kunden.
@@ -85,7 +85,7 @@ public class AusleihWerkzeug
      */
     public AusleihWerkzeug(MedienbestandService medienbestand,
             KundenstammService kundenstamm, VerleihService verleihService,
-            VormerkService vormerkService)
+            VormerkServiceImpl vormerkService)
     {
         assert medienbestand
                 != null : "Vorbedingung verletzt: medienbestand != null";

@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.kundenstamm.KundenstammService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.medienbestand.MedienbestandService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.VerleihService;
-import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerk.VormerkService;
+import de.uni_hamburg.informatik.swt.se2.mediathek.services.vormerk.VormerkServiceImpl;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.ausleihe.AusleihWerkzeug;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.rueckgabe.RueckgabeWerkzeug;
 import de.uni_hamburg.informatik.swt.se2.mediathek.werkzeuge.vormerken.VormerkWerkzeug;
@@ -42,7 +42,7 @@ public class MediathekWerkzeug
     /**
      * Der Service zum Vormerken von Medien.
      */
-    private final VormerkService _vormerkService;
+    private final VormerkServiceImpl _vormerkService;
 
     /**
      * Das AusleihWerkzeug.
@@ -71,7 +71,7 @@ public class MediathekWerkzeug
      * @require verleihService != null
      */
     public MediathekWerkzeug(MedienbestandService medienbestand,
-            KundenstammService kundenstamm, VerleihService verleihService, VormerkService vormerkService)
+            KundenstammService kundenstamm, VerleihService verleihService, VormerkServiceImpl vormerkService)
     {
         assert medienbestand != null : "Vorbedingung verletzt: medienbestand != null";
         assert kundenstamm != null : "Vorbedingung verletzt: kundenstamm != null";
