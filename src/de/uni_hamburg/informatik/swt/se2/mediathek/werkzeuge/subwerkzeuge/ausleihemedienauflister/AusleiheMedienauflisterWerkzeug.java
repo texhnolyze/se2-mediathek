@@ -133,6 +133,7 @@ public class AusleiheMedienauflisterWerkzeug extends ObservableSubWerkzeug
         };
         _medienbestand.registriereBeobachter(beobachter);
         _verleihService.registriereBeobachter(beobachter);
+        _vormerkService.registriereBeobachter(beobachter);
     }
 
     /**
